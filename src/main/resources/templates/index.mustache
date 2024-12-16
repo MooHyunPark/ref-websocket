@@ -9,7 +9,7 @@
 <div>
     <ul>
         <li><a href="/">채팅목록</a></li>
-        <li><a href="/chat-form">채팅 메시지쓰기</a></li>
+        <li><a href="/save-form">채팅 메시지쓰기</a></li>
     </ul>
 </div>
 <h1>채팅 목록</h1>
@@ -21,10 +21,24 @@
 </ul>
 
 <script>
-    setTimeout(() => {
-        location.reload();
+    setInterval(()=>{
+        chatList();
     }, 2000);
 
+    async function chatList(){
+        let response = await fetch("/api");
+        let responseBody = await response.json();
+
+        let site = document.querySelector("#chat-box");
+        site.innerHTML = "";
+
+        responseBody.forEach(chat=> {
+            let dom = document.createElement("li");
+            dom.innerText = chat.msg;
+            site.append(dom);
+        });
+    }
 </script>
+
 </body>
 </html>
