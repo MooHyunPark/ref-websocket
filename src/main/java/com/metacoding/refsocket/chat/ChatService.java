@@ -13,9 +13,10 @@ public class ChatService {
     private final ChatRepository chatRepository;
 
     @Transactional
-    public void save(String msg) {
+    public Chat save(String msg) {
         Chat chat = Chat.builder().msg(msg).build();
         chatRepository.save(chat);
+        return chat;
     }
 
     public List<Chat> findAll() {

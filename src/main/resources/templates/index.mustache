@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
 <div>
     <ul>
         <li><a href="/">채팅목록</a></li>
-        <li><a href="/chat-form">채팅 메시지쓰기</a></li>
+        <li><a href="/save-form">채팅 메시지쓰기</a></li>
     </ul>
 </div>
 <h1>채팅 목록</h1>
@@ -21,10 +22,27 @@
 </ul>
 
 <script>
-    setTimeout(() => {
-        location.reload();
-    }, 2000);
+    // 1. 웹소켓 연결 세팅 및 연결 완료
+    let socket = new WebSocket('ws://192.168.0.88:8080/connect'); // 현재 컴퓨터의 ip 주소
+    let stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, (frame)=>{
+        console.log("1", "Connected");
+
+        stompClient.subscribe("/sub/chat", (response)=>{
+            console.log("2", response);
+            let body = JSON.parse(response.body);
+            console.log("3", body);
+
+            let site = document.querySelector("#chat-box");
+            let dom = document.createElement("li");
+            dom.innerHTML = body.msg;
+            site.prepend(dom);
+        });
+
+    });
 
 </script>
+
 </body>
 </html>
